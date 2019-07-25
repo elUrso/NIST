@@ -22,6 +22,29 @@ public class NIST {
                 return floatArray
             }
         }
+
+        var asVector: Matrix<Double> {
+            get {
+                var matrix = Matrix<Double>(rows: source.count, columns: 1, with: 0.0)
+
+                for i in 0..<source.count {
+                    matrix.setAt(row: i, column: 0, to: Double(source[i]) / 255)
+                }
+                
+                return matrix
+            }
+        }
+
+        public func toString() -> String {
+            var str = ""
+            for i in 0..<28 {
+                for j in 0..<28 {
+                    str += "\(source[i*28+j].asColorChar)"
+                }
+                str += "\n"
+            }
+            return str
+        }
     }
     
     public typealias ImageData = [UInt8]
@@ -71,6 +94,42 @@ public class NIST {
         }
         
         return ret
+    }
+}
+
+extension UInt8 {
+    var asColorChar: String {
+        get {
+            if self > 240 {
+                return "#"
+            }
+            if self > 200 {
+                return "0"
+            }
+            if self > 150 {
+                return "x"
+            }
+            if self > 100 {
+                return "o"
+            }
+            if self > 50 {
+                return "*"
+            }
+            if self > 20 {
+                return "."
+            }
+            return " "
+        }
+    }
+}
+
+extension Int8 {
+    var asVector: Matrix<Double> {
+        get {
+            return Matrix<Double>(rows:10, columns: 1, with: {row, _ in
+                    return (row == Int(self)) ? 0.0 : 1.0
+                })
+        }
     }
 }
 
